@@ -10,13 +10,20 @@ app.config.from_object(Config)
 client = MongoClient(app.config['MONGO_URI'])
 db = client.test  # Certifique-se de que o nome do banco está correto
 
-# Acesse a subcoleção "check"
 collection = db.check
 
-# Função para converter o documento antes de retornar
 def serialize_item(item):
     item['_id'] = str(item['_id'])  # Converte ObjectId para string
     return item
+
+@app.route('/items', methods=['GET'])
+def get_all_items():
+    try:
+        items = collection.find()  # Obter todos os documentos
+        serialized_items = [serialize_item(item) for item in items]
+        return jsonify(serialized_items), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/item/<item_id>', methods=['GET'])
 def get_item(item_id):
@@ -48,4 +55,3 @@ def update_item(item_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-
