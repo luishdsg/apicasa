@@ -2,7 +2,6 @@
   "name": "apicasa",
   "version": "1.0.0",
   "description": "ok",
-  "main": "s",
   "scripts": {
     "start": "node api/index.js"
   },
