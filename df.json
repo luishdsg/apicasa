@@ -1,0 +1,20 @@
+{
+    "aparelho_de_jantar": false,
+    "batedeira": false,
+    "conjunto_pote_tempero": false,
+    "conjunto_sobremesa": false,
+    "conjunto_tacas": false,
+    "conjunto_utensilios_cozinha": false,
+    "conjunto_bacias": false,
+    "grill": false,
+    "jogo_toalha": false,
+    "jogo_pano_prato": false,
+    "jogo_cama": false,
+    "jogo_tabuas_cortes": false,
+    "jogo_potes_hermeticos": false,
+    "kit_ferramentas": false,
+    "liquidificador": false,
+    "petisqueira_vidro": false,
+    "refratarios": false,
+    "tapetes": false
+}
