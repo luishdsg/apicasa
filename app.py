@@ -16,42 +16,41 @@ def serialize_item(item):
     item['_id'] = str(item['_id'])  # Converte ObjectId para string
     return item
 
-@app.route('/items', methods=['GET'])
-def get_all_items():
-    try:
-        items = collection.find()  # Obter todos os documentos
-        serialized_items = [serialize_item(item) for item in items]
-        return jsonify(serialized_items), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/item', methods=['GET', 'PATCH'])
+def manage_item():
+    if request.method == 'GET':
+        items = list(collection.find())
+        return jsonify([serialize_item(item) for item in items]), 200
 
-@app.route('/item/<item_id>', methods=['GET'])
-def get_item(item_id):
-    try:
-        item = collection.find_one({"_id": ObjectId(item_id)})
-        if item:
-            return jsonify(serialize_item(item)), 200
-        return jsonify({"error": "Item not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    if request.method == 'PATCH':
+        data = request.json
+        
+        # Verifica se o ID está presente
+        item_id = data.get('_id')
+        if not item_id:
+            return jsonify({"error": "ID is required"}), 400
+        
+        # Converte o ID para ObjectId
+        try:
+            object_id = ObjectId(item_id)
+        except Exception:
+            return jsonify({"error": "Invalid ObjectId format"}), 400
+        
+        # Prepara os dados para atualização
+        updates = {
+            "valor": data.get('valor'),
+            "name": data.get('name')
+        }
 
-@app.route('/item/<item_id>', methods=['PATCH'])
-def update_item(item_id):
-    try:
-        updates = request.json
-        if not all(isinstance(v, bool) for v in updates.values()):
-            return jsonify({"error": "All values must be boolean"}), 400
-
+        # Atualiza o item no banco de dados
         result = collection.update_one(
-            {"_id": ObjectId(item_id)},
+            {"_id": object_id},
             {"$set": updates}
         )
 
         if result.modified_count > 0:
             return jsonify({"message": "Item updated successfully"}), 200
         return jsonify({"error": "No changes made or item not found"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
