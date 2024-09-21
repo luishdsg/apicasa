@@ -4,7 +4,7 @@
   "description": "ok",
   "main": "s",
   "scripts": {
-    "start": "node api/index.j"
+    "start": "node api/index.js"
   },
     "dependencies": {
       "json-server": "^1.0.0-beta.2"
